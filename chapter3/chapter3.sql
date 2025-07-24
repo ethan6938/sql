@@ -10,7 +10,10 @@ VALUES
     ('defghi', 'defghi', 'defghi');
 
 
-copy char_data_types TO '/Users/ethanhurwitz/Desktop/code colede/sql/sql/chapter3/Untitled.csv' WITH (FORMAT CSV, HEADER, DELIMITER '|');
+SELECT * FROM char_data_types;
+
+
+copy char_data_types TO '/Users/ethanhurwitz/Desktop/code colede/sql/sql/chapter2.sql' WITH (FORMAT CSV, HEADER, DELIMITER '|');
 
 CREATE TABLE number_data_types (
     numeric_column numeric(20,5),
