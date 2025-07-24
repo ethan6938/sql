@@ -71,14 +71,3 @@ SELECT first_name, last_name, school, hire_date, salary, age
 FROM teachers
 WHERE school LIKE '%Roos%'
 ORDER BY hire_date DESC;
-
-
-
-CREATE TABLE  (
-    id bigserial,
-    first_name varchar(25),
-    last_name varchar(50),
-    school varchar(50),
-    hire_date date,
-    salary numeric
-);
