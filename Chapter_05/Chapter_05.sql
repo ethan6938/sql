@@ -24,7 +24,7 @@ SELECT 3 ^ 4;    -- exponentiation
 SELECT |/ 10;    -- square root (operator)
 SELECT sqrt(10); -- square root (function)
 SELECT ||/ 10;   -- cube root
-SELECT 4 !;      -- factorial
+SELECT factorial(4);      -- factorial
 
 -- Order of operations
 
@@ -198,11 +198,11 @@ CREATE AGGREGATE median(anyelement) (
 
 -- Listing 5-15: Using a median() aggregate function
 
-SELECT sum(p0010001) AS "County Sum",
-       round(avg(p0010001), 0) AS "County Average",
-       median(p0010001) AS "County Median",
-       percentile_cont(.5)
-       WITHIN GROUP (ORDER BY P0010001) AS "50th Percentile"
+SELECT 
+    sum(p0010001) AS "County Sum",
+    round(avg(p0010001), 0) AS "County Average",
+    percentile_cont(0.5) 
+        WITHIN GROUP (ORDER BY p0010001) AS "County Median"
 FROM us_counties_2010;
 
 -- Listing 5-16: Finding the most-frequent value with mode()
