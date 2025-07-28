@@ -22,8 +22,8 @@ WHERE first_name IS NULL
 
 ALTER TABLE teachers ADD COLUMN age INTEGER;
 
-UPDATE teachers SET age = 17 WHERE id = 7;
-UPDATE teachers SET age = 9 WHERE id = 8;
+UPDATE teachers SET age = 47 WHERE id = 5;
+UPDATE teachers SET age = 56 WHERE id = 6;
 
 
 SELECT last_name, school, hire_date
