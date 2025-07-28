@@ -13,7 +13,7 @@ VALUES
 SELECT * FROM char_data_types;
 
 
-copy char_data_types TO '/Users/ethanhurwitz/Desktop/code colede/sql/sql/chapter2.sql' WITH (FORMAT CSV, HEADER, DELIMITER '|');
+copy char_data_types from '/Users/ethanhurwitz/Desktop/code colede/sql/sql/chapter4/us_counties_2010.scv' WITH (FORMAT CSV, HEADER, DELIMITER '|');
 
 CREATE TABLE number_data_types (
     numeric_column numeric(20,5),
