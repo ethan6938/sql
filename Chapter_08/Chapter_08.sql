@@ -88,8 +88,11 @@ CREATE INDEX city2014_idx ON pls_fy2014_pupld14a (city);
 CREATE INDEX visits2014_idx ON pls_fy2014_pupld14a (visits);
 
 COPY pls_fy2014_pupld14a
-FROM 'C:\YourDirectory\pls_fy2014_pupld14a.csv'
+FROM '/tmp/pls_fy2014_pupld14a.csv'
 WITH (FORMAT CSV, HEADER);
+
+SELECT * FROM pls_fy2014_pupld14a
+
 
 -- Listing 8-2: Creating and filling the 2009 Public Libraries Survey table
 
@@ -170,8 +173,10 @@ CREATE INDEX city2009_idx ON pls_fy2009_pupld09a (city);
 CREATE INDEX visits2009_idx ON pls_fy2009_pupld09a (visits);
 
 COPY pls_fy2009_pupld09a
-FROM 'C:\YourDirectory\pls_fy2009_pupld09a.csv'
+FROM '/tmp/pls_fy2009_pupld09a.csv'
 WITH (FORMAT CSV, HEADER);
+
+SELECT * FROM pls_fy2009_pupld09a
 
 -- Listing 8-3: Using count() for table row counts
 
