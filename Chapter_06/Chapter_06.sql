@@ -15,6 +15,9 @@ CREATE TABLE departments (
     CONSTRAINT dept_city_unique UNIQUE (dept, city)
 );
 
+SELECT * FROM employees
+SELECT * FROM departments
+
 CREATE TABLE employees (
     emp_id bigserial,
     first_name varchar(100),
@@ -54,6 +57,9 @@ CREATE TABLE schools_right (
     id integer CONSTRAINT right_id_key PRIMARY KEY,
     right_school varchar(30)
 );
+
+SELECT * FROM schools_left
+SELECT * FROM schools_right
 
 INSERT INTO schools_left (id, left_school) VALUES
     (1, 'Oak Street School'),
@@ -178,8 +184,10 @@ CREATE TABLE us_counties_2000 (
     p0020003 integer                   -- Not Hispanic or Latino:
 );
 
+SELECT *FROM us_counties_2000;
+
 COPY us_counties_2000
-FROM 'C:\YourDirectory\us_counties_2000.csv'
+FROM '/tmp/us_counties_2000.csv'
 WITH (FORMAT CSV, HEADER);
 
 SELECT c2010.geo_name,
@@ -194,3 +202,66 @@ ON c2010.state_fips = c2000.state_fips
    AND c2010.county_fips = c2000.county_fips
    AND c2010.p0010001 <> c2000.p0010001
 ORDER BY pct_change DESC;
+
+
+
+
+
+
+CREATE TABLE projects (
+    project_id bigserial,
+    project_name varchar(100),
+    client_name varchar(100),
+    start_date date,
+    status varchar(50),
+    CONSTRAINT projects_pk PRIMARY KEY (project_id)
+);
+
+SELECT *FROM projects;
+
+INSERT INTO projects (project_name, client_name, start_date, status)
+VALUES 
+('Website Redesign', 'Acme Corp', '2025-06-01', 'In Progress'),
+('Mobile App Development', 'Beta Ltd', '2025-05-15', 'Completed'),
+('Cloud Migration', 'Delta Inc', '2025-04-10', 'On Hold'),
+('Data Analytics Setup', 'Gamma Group', '2025-07-01', 'In Progress'),
+('E-commerce Integration', 'Omega Retail', '2025-03-20', 'Cancelled');
+
+
+CREATE TABLE tasks (
+    task_id bigserial,
+    task_name varchar(100),
+    assigned_to varchar(100),
+    due_date date,
+    project_id bigint,
+    CONSTRAINT tasks_pk PRIMARY KEY (task_id)
+);
+
+SELECT *FROM tasks;
+
+INSERT INTO tasks (task_name, assigned_to, due_date, project_id)
+VALUES
+('Design Mockups', 'Alice Johnson', '2025-07-15', 1),
+('Frontend Development', 'Bob Smith', '2025-08-01', 1),
+('User Testing', 'Charlie Lee', '2025-05-30', 2),
+('Server Migration', 'Dana White', '2025-04-25', 3),
+('KPI Dashboard Setup', 'Eva Green', '2025-07-28', 4),
+('API Integration', 'Frank Lin', '2025-03-25', 5),
+('Project Documentation', 'Grace Kim', '2025-04-01', 5);
+
+
+SELECT 
+    projects.project_id,
+    projects.project_name,
+    projects.client_name,
+    projects.start_date,
+    projects.status,
+
+
+    tasks.task_id,
+    tasks.task_name,
+    tasks.assigned_to,
+    tasks.due_date,
+    tasks.project_id AS task_project_id
+FROM projects
+JOIN tasks ON projects.project_id = tasks.project_id;
