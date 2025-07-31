@@ -41,7 +41,7 @@ SELECT company,
 FROM meat_poultry_egg_inspect
 GROUP BY company, street, city, st
 HAVING count(*) > 1
-ORDER BY company, street, city, st;
+ORDER BY company, street, city, st;u
 
 -- Listing 9-3: Grouping and counting states
 SELECT st, 
@@ -49,6 +49,9 @@ SELECT st,
 FROM meat_poultry_egg_inspect
 GROUP BY st
 ORDER BY st;
+
+SELECT DISTINCT ON (st) st, count(*) OVER (PARTITION BY st) AS st_count
+FROM meat_poultry_egg_inspect;
 
 -- Listing 9-4: Using IS NULL to find missing values in the st column
 SELECT est_number,
