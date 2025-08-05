@@ -106,6 +106,9 @@ CREATE TABLE retirees (
     last_name varchar(50)
 );
 
+DROP TABLE retirees 
+
+
 INSERT INTO retirees 
 VALUES (2, 'Lee', 'Smith'),
        (4, 'Janet', 'King');
@@ -308,3 +311,93 @@ SELECT station_name, max_temperature_group, count(*)
 FROM temps_collapsed
 GROUP BY station_name, max_temperature_group
 ORDER BY station_name, count(*) DESC;
+
+
+DROP TABLE employes
+
+
+
+
+CREATE TABLE department (
+    department_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    facility VARCHAR(100)
+);
+
+CREATE TABLE employes (
+    employee_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR (100) UNIQUE,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+INSERT INTO department (name, facility)
+VALUES
+    ('SQL', 'Home'),
+    ('MERN', 'Office');
+
+INSERT INTO employes (full_name, email, department_id) VALUES
+('Alexander Badenhorst', 'alex@example.com', 1),
+('Courtney Cook', 'courtsey_of_courtney@funmail.io', 2),
+('Cadee Rousseau', 'codee.withcadee@byte.com', 1),
+('David Koen', 'teachinator.david@brainboost.edu', 1),
+('Ethan Hurwitz', 'ethanator@hackmail.com', 1),
+('Lindokuhle Yende', 'lindo.logic@neuralhub.org', 1),
+('Marvelous Kahundahunda', 'absolutely.marvelous@wow.com', 1),
+('Pierre Kahundahunda', 'pierrefect.code@bonjour.dev', 1),
+('Ronny Mputla', 'run.run.ronny@speedmail.net', 1),
+('Sibusiso Makhiwane', 'sibu.saves@galaxymail.com', 1),
+('Tom Vuma', 'tom.tornado@scriptstorm.dev', 1),
+('Ulrich Snyman', 'ultimatecoding@master.com', 1);
+
+
+ALTER TABLE employes
+ADD COLUMN department_id INTEGER REFERENCES department(department_id);
+
+SELECT * FROM department
+SELECT * FROM employes
+
+COPY (
+    SELECT 
+        e.full_name, 
+        e.email, 
+        d.name AS department_name
+    FROM employes e
+    JOIN department d ON e.department_id = d.department_id
+) TO '/tmp/joined_employees_departments.csv' CSV HEADER;
+
+
+
+
+ALTER TABLE employes
+ADD COLUMN score INTEGER;
+
+UPDATE employes SET score = 88 WHERE full_name = 'Alexander Badenhorst';
+UPDATE employes SET score = 91 WHERE full_name = 'Cadee Rousseau';
+UPDATE employes SET score = 85 WHERE full_name = 'David Koen';
+UPDATE employes SET score = 76 WHERE full_name = 'Ethan Hurwitz';
+UPDATE employes SET score = 94 WHERE full_name = 'Lindokuhle Yende';
+UPDATE employes SET score = 89 WHERE full_name = 'Marvelous Kahundahunda';
+UPDATE employes SET score = 92 WHERE full_name = 'Pierre Kahundahunda';
+UPDATE employes SET score = 74 WHERE full_name = 'Ronny Mputla';
+UPDATE employes SET score = 95 WHERE full_name = 'Sibusiso Makhiwane';
+UPDATE employes SET score = 80 WHERE full_name = 'Tom Vuma';
+UPDATE employes SET score = 87 WHERE full_name = 'Ulrich Snyman';
+UPDATE employes SET score = 65 WHERE full_name = 'Courtney Cook';
+
+SELECT full_name, (score)
+FROM employes
+ORDER BY (score) DESC
+LIMIT 1;
+
+
+WITH ranked_employes AS (
+    SELECT 
+        full_name,
+        score,
+        RANK() OVER (ORDER BY score DESC) AS score_rank
+    FROM employes
+)
+SELECT full_name, score
+FROM ranked_employes
+WHERE score_rank = 1;
