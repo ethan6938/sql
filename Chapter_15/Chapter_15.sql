@@ -163,7 +163,7 @@ SELECT update_personal_days();
 
 -- Listing 15-14: Enabling the PL/Python procedural language
 
-CREATE EXTENSION plpythonu;
+CREATE EXTENSION plpython3u;
 
 -- Listing 15-15: Using PL/Python to create the trim_county() function
 
@@ -172,7 +172,7 @@ RETURNS text AS $$
     import re
     cleaned = re.sub(r' County', '', input_string)
     return cleaned
-$$ LANGUAGE plpythonu;
+$$ LANGUAGE plpython3u;
 
 -- Listing 15-16: Testing the trim_county() function
 
@@ -319,3 +319,56 @@ VALUES
     ('North Station', '8/9/2019', 93, 74);
 
 SELECT * FROM temperature_test;
+
+
+CREATE OR REPLACE FUNCTION greet_user(username TEXT)
+RETURNS TEXT AS $$
+BEGIN
+    RETURN 'Hello, ' || username || '!';
+END;
+$$ LANGUAGE plpgsql;
+
+
+SELECT greet_user('Ethan');
+
+
+
+
+
+
+
+CREATE TABLE users1 (
+    user_id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user_log (
+    log_id SERIAL PRIMARY KEY,
+    user_id INT,
+    log_message TEXT,
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE OR REPLACE FUNCTION log_user_creation()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO user_log (user_id, log_message)
+    VALUES (NEW.user_id, 'New user created: ' || NEW.username);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_log_user_creation
+AFTER INSERT ON users1
+FOR EACH ROW
+EXECUTE FUNCTION log_user_creation();
+
+INSERT INTO users1 (username, email) VALUES
+('Alex', 'alex@mail.com'),
+('Ethan', 'ethan@mail.com');
+
+
+SELECT * from user_log;
