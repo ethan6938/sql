@@ -86,7 +86,7 @@ BEGIN
   END IF;
 END$$;
 SELECT * FROM Cart WHERE User_ID=1 ORDER BY ProductId;
-
+SELECT * FROM Products ORDER BY Id;
 -- =========================================================
 -- 4) REMOVE AN ITEM FROM THE CART
 -- Rule: if qty > 1 then -1; if qty = 1 then delete row
@@ -149,40 +149,6 @@ SELECT * FROM Cart WHERE User_ID=1 ORDER BY ProductId;
 DELETE FROM Cart WHERE User_ID=1 AND ProductId=2;
 SELECT * FROM Cart WHERE User_ID=1 ORDER BY ProductId;
 
--- Checkout again (User 1 second order)
-DO $$
-DECLARE new_order_id BIGINT;
-BEGIN
-  INSERT INTO OrderHeader(User_ID, OrderDate) VALUES (1, now())
-  RETURNING OrderID INTO new_order_id;
-
-  INSERT INTO OrderDetails (OrderID, ProdID, Qty, PriceEach)
-  SELECT new_order_id, c.ProductId, c.Qty, p.Price
-  FROM Cart c
-  JOIN Products p ON p.Id = c.ProductId
-  WHERE c.User_ID = 1;
-
-  DELETE FROM Cart WHERE User_ID = 1;
-END$$;
-
--- Create an order for User 2 as well (third order overall)
-INSERT INTO Cart(User_ID, ProductId, Qty) VALUES (2,2,2)
-ON CONFLICT (User_ID, ProductId) DO UPDATE SET Qty = Cart.Qty + 2;
-
-DO $$
-DECLARE new_order_id BIGINT;
-BEGIN
-  INSERT INTO OrderHeader(User_ID, OrderDate) VALUES (2, now())
-  RETURNING OrderID INTO new_order_id;
-
-  INSERT INTO OrderDetails (OrderID, ProdID, Qty, PriceEach)
-  SELECT new_order_id, c.ProductId, c.Qty, p.Price
-  FROM Cart c
-  JOIN Products p ON p.Id = c.ProductId
-  WHERE c.User_ID = 2;
-
-  DELETE FROM Cart WHERE User_ID = 2;
-END$$;
 
 -- =========================================================
 -- PRINTING ORDERS (joins)
